@@ -182,6 +182,12 @@ async def add_account(account: Account):
         json.dump(accounts, file, indent=2)
     return {"message": "Account added successfully", "token": account.token}
 
+# this is to get all the accounts from the json file
+@app.get("/api/get_accounts")
+async def get_all_accounts():
+    accounts = get_accounts()
+    return {"accounts": accounts['accounts']}
+
 @app.post("/api/query")
 async def query_database(query: Query):
     global db_config
@@ -209,4 +215,4 @@ async def query_database(query: Query):
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run("app:app", host="0.0.0.0", port=10000, reload=True)
