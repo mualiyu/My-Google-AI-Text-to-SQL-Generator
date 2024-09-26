@@ -1,0 +1,11 @@
+{
+  "accounts": [
+    {
+      "token": "f813b1d1-8bc5-4d2b-993a-f69111328284",
+      "host": "127.0.0.1",
+      "user": "root",
+      "password": "20111755Db",
+      "database": "test"
+    }
+  ]
+}
