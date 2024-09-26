@@ -1,10 +1,11 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Depends
 from pydantic import BaseModel
 from dotenv import load_dotenv
 import os
 import mysql.connector
 import google.generativeai as genai
 from mysql.connector import Error
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 
 import json
 
@@ -26,6 +27,7 @@ genai.configure(api_key=env_var)
 # }
 
 app = FastAPI()
+security = HTTPBearer()
 
 class Account(BaseModel):
     token: str = None  # Token will be auto-generated
@@ -184,7 +186,10 @@ async def add_account(account: Account):
 
 # this is to get all the accounts from the json file
 @app.get("/api/get_accounts")
-async def get_all_accounts():
+async def get_all_accounts(credentials: HTTPAuthorizationCredentials = Depends(security)):
+    if credentials.credentials != os.getenv('ACCESS_TOKEN'):
+        raise HTTPException(status_code=401, detail="Invalid or missing token")
+    
     accounts = get_accounts()
     return {"accounts": accounts['accounts']}
 
